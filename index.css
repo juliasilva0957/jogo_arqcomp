@@ -1,0 +1,59 @@
+/*fontes para usar*/
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background-color: #FBF4E4;
+    font-family: 'Pixelify Sans';
+}
+
+.fundo-home{
+    background-image:linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(assets/img/fundo.png) ;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 780px;
+
+    display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.titulo{
+
+    color: #FBF4E4;
+}
+
+.titulo h1{
+    font-size: 80px;
+}
+
+.subtitulo{
+    color: #FBF4E4;
+    margin-top: -20px;
+}
+
+.botao{
+    background-color: #F0A500;
+    color: whitesmoke;
+    border: none;
+    border-radius: 10px;
+    font-family:'Pixelify Sans' ;
+    padding: 10px 15px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    margin-top: 20px;
+}
+
+.botao:hover{
+    background-color: #dd9802;
+}
