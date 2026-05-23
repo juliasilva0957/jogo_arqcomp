@@ -1,34 +1,101 @@
 @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
 
 
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-body{
-    background-color: #FBF4E4;
-    font-family: 'Pixelify Sans';
+body {
+  background-color: #FBF4E4;
+  font-family: 'Pixelify Sans';
 }
 
-.fundo-home{
-    background-image: url(assets/img/fundo.png) ;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    min-height: 780px;
+.fundo-home {
+  background-image: url(assets/img/fundo.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 780px;
 
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   position: relative;
+  padding-bottom: 15px;
 }
 
-.professor{
-  position: absolute;
-  bottom: 0;     
-  left: 0;         
-    width: 550px;
+.caixaDialogo {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.nome {
+  color: #fff;
+  font-weight: bold;
+  padding: 5px 15px;
+  width: max-content;
+  text-transform: uppercase;
+}
+
+.texto {
+  background: rgba(10, 10, 10, 0.552);
+  color: #fff;
+  padding: 25px;
+  font-size: 20px;
+  min-height: 120px;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.botoes {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+}
+
+button {
+  background-color: #F0A500;
+  color: whitesmoke;
+  border: none;
+  border-radius: 5px;
+  font-family: 'Pixelify Sans';
+  padding: 10px 15px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  margin-top: 0;
+  width: 40%;
+  align-self: center;
+}
+
+button:hover {
+  background: #f2c233;
+}
+
+input {
+    width: 100%;
+    padding: 10px 15px;
+    font-family: 'Pixelify Sans';
+    font-size: 1rem;
+    border: none;
+    outline: none;
+    opacity: 0.8;
+}
+
+.contador-erros {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    font-size: 1rem;
+    padding: 6px 14px;
+    border-radius: 8px;
+    z-index: 2;
 }

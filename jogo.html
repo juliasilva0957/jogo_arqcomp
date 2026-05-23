@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +8,248 @@
     <link rel="stylesheet" href="jogo.css">
     <link rel="icon" href="assets/logo/meta.png">
 </head>
-<body>
-    <div class="fundo-home">
-        <img class="professor" src="assets/img/normal (2).png" alt="">
 
-    </div>
-    
+<body>
+    <div class="fundo-home" id="fundo-home">
+        <div id="contador-erros" class="contador-erros"> Erros: 0 / 3</div>
+        <div class="caixaDialogo">
+            <div id="nome" class="nome">Narrador</div>
+            <div id="texto" class="texto">Olá! <br> Seja bem-vindo ao Salvation Of the Computing World, estamos muito
+                feliz em te ter nessa jornada! <br> Agora sente-se em uma das mesas e enquanto aguardamos o professor
+                Koro, eu irei te contar como chegamos aqui</div>
+
+            <div id="botoes" class="botoes">
+                <button onclick="inicio()">Continuar</button>
+            </div>
+        </div>
+
 </body>
+
 </html>
+<script>
+    let nomeJogador = ``
+    let erros = 0
+    let acertos = 0
+    let perguntaAtual = 0
+
+    let fundo = document.getElementById(`fundo-home`)
+    let contadorErros = document.getElementById(`contador-erros`)
+    let nome = document.getElementById(`nome`)
+    let texto = document.getElementById(`texto`)
+    let botoes = document.getElementById(`botoes`)
+
+
+    /*json com todas as perguntas e respostas(esperando validação do professor)**/
+
+    let perguntas = [
+        {
+            "dialogo": `certo?! Vamos para a primeira pergunta! Temos um componente essencial para executar e processar instruções. Qual seria ele?`,
+            "opcoes": [`CPU`, `GPU`, `RAM`, `HD`],
+            "correta": `CPU`,
+            "textoAcerto": `A CPU é o cérebro do computador, responsável por executar e processar todas as instruções do sistema!`
+        },
+        {
+            "dialogo": `Próxima pergunta, quando estudamos portas logicas, estudamos que o computador processa as informações de um jeito diferente, qual componente computacional é responsável por realizar operações lógicas?`,
+            "opcoes": [`CPU`, `ULA`, `RAM`, `Barramento`],
+            "correta": `ULA`,
+            "textoAcerto": `A ULA, Unidade Lógica e Aritmética, é responsável por realizar todas as operações lógicas e matemáticas dentro do computador!`
+        },
+        {
+            "dialogo": `Continuando, como todos vocês sabem, eu sou uma criatura que consigo me movimentar em Mach 20 e dentro dos computadores temos uma memória que é rápida assim como eu, você sabe qual é?`,
+            "opcoes": [`Memória RAM`, `Memória ROM`, `Registradores`, `Cache L3`],
+            "correta": `Registradores`,
+            "textoAcerto": `Os Registradores são a memória mais rápida do computador, ficam dentro da própria CPU!`
+        },
+        {
+            "dialogo": `! ! Agora vamos fazer um jogo de advinha, eu sou um componente essencial do computador, responsável por armazenar temporariamente as informações que estão sendo usadas no momento. Quanto maior eu for, mais programas e tarefas podem funcionar ao mesmo tempo sem lentidão. Quem sou eu?`,
+            "opcoes": [`SSD`, `Memória RAM`, `Memória ROM`, `Registrador`],
+            "correta": `Memória RAM`,
+            "textoAcerto": `A Memória RAM armazena temporariamente os dados em uso. Quanto mais RAM, mais programas rodando ao mesmo tempo!`
+        },
+        {
+            "dialogo": `! É um componente que guarda dados essenciais para o funcionamento do firmware mais importante para o sistema computacional, o BIOS, de qual componente eu estou falando?`,
+            "opcoes": [`Memória RAM`, `HD`, `Memória ROM`, `Flash`],
+            "correta": `Memória ROM`,
+            "textoAcerto": `A Memória ROM guarda dados permanentes como o BIOS, essenciais para iniciar o computador!`
+        },
+        {
+            "dialogo": `! O que é, o que é? Guarda informações mesmo quando o computador é desligado, pode ser apagada com luz ultravioleta e depois reprogramada. Quem sou eu?`,
+            "opcoes": [`RAM`, `ROM`, `Flash`, `EPROM`],
+            "correta": `EPROM`,
+            "textoAcerto": `A EPROM pode ser apagada com luz ultravioleta e reprogramada. É uma memória não volátil muito especial!`
+        },
+        {
+            "dialogo": `! Agora temos uma memória diferente das demais, ela é uma memória usada em pen drives e SSDs para guardar arquivos mesmo com o dispositivo desligado, de qual memória estamos falando?`,
+            "opcoes": [`RAM`, `ROM`, `Flash`, `EPROM`],
+            "correta": `Flash`,
+            "textoAcerto": `A memória Flash é usada em pen drives e SSDs. Ela guarda dados sem precisar de energia elétrica constante!`
+        },
+        {
+            "dialogo": `! Hora do desafio! Sem mim, seus arquivos, jogos e documentos desapareceriam se você desligasse o seu computador, você sabe quem eu sou?`,
+            "opcoes": [`Memória RAM`, `Memória de massa`, `Registrador`, `Cache`],
+            "correta": `Memória de massa`,
+            "textoAcerto": `A Memória de massa, como HDs e SSDs, guarda todos os seus arquivos permanentemente mesmo após desligar o computador!`
+        },
+        {
+            "dialogo": `Preste bem atenção! esse é um componente que está presente nos computadores modernos que permite a transferência de dados diretamente com a memória RAM, você sabe de que componente estou falando?`,
+            "opcoes": [`CPU`, `GPU`, `DMA`, `Cache`],
+            "correta": `DMA`,
+            "textoAcerto": `O DMA, Acesso Direto à Memória, permite transferir dados diretamente com a RAM sem passar pela CPU!`
+        },
+        {
+            "dialogo": `! O próximo componente é responsável por habilitar ou componentes eletrônicos durante o funcionamento do computador, consegue adivinhar qual é?`,
+            "opcoes": [`DMA`, `ULA`, `CS – Chip Select`, `Data Bus`],
+            "correta": `CS – Chip Select`,
+            "textoAcerto": `O Chip Select é o sinal que habilita ou desabilita componentes eletrônicos específicos durante o funcionamento do computador!`
+        },
+        {
+            "dialogo": `Correto/Errado! O componente da vez tem função é carregar endereços de memória dentro do computador, ajudando na localização de dados e instruções, consegue adivinhar?`,
+            "opcoes": [`Data Bus`, `Address Bus`, `Control Bus`, `DMA`],
+            "correta": `Address Bus`,
+            "textoAcerto": `O Address Bus é responsável por carregar os endereços de memória, indicando onde os dados estão armazenados!`
+        },
+        {
+            "dialogo": `!  Esse componente, diferente do outro, é responsável por transportar os dados entre o processador, a memória e os periféricos, conhece qual ele é?`,
+            "opcoes": [`Address Bus`, `Control Bus`, `Data Bus`, `DMA`],
+            "correta": `Data Bus`,
+            "textoAcerto": `O Data Bus transporta os dados entre processador, memória e periféricos. Diferente do Address Bus que só carrega endereços!`
+        },
+        {
+            "dialogo": `Diferente dos outros componente, esse componente possui múltiplos núcleos de processamento, permitindo executar várias tarefas ao mesmo tempo com bom desempenho, sabe de qual processador estamos falando?`,
+            "opcoes": [`i3`, `i5`, `i7`, `Dual Core`],
+            "correta": `i5`,
+            "textoAcerto": `O i5 possui múltiplos núcleos e oferece bom desempenho para multitarefa no dia a dia!`
+        },
+        {
+            "dialogo": `! Esse componente se iguala ao anterior, porém, ele é conhecido por possuir mais desempenho e velocidade que modelos intermediários da mesma geração, consegue identificar qual seria?`,
+            "opcoes": [`i3`, `i5`, `i7`, `Quad Core`],
+            "correta": `i7`,
+            "textoAcerto": `O i7 é mais poderoso que o i5, com mais velocidade e desempenho para tarefas pesadas!`
+        },
+        {
+            "dialogo": `Bom, irei facilitar essa para você, esse processador foi criado para melhorar a multitarefa, permitindo que duas unidades de processamento atuem simultaneamente, de qual processador eu estou falando?`,
+            "opcoes": [`Quad Core`, `i7`, `Single Core`, `Dual Core`],
+            "correta": `Dual Core`,
+            "textoAcerto": `O Dual Core possui dois núcleos de processamento que atuam simultaneamente, melhorando muito a multitarefa!`
+        },
+        {
+            "dialogo": `Última pergunta, esse componente aumenta a capacidade de processamento do sistema ao executar múltiplas threads de forma mais eficiente em quatro núcleos físicos, qual seria esse processador?`,
+            "opcoes": [`Dual Core`, `i5`, `Quad Core`, `i3`],
+            "correta": `Quad Core`,
+            "textoAcerto": `O Quad Core possui quatro núcleos físicos, executando múltiplas threads simultaneamente com muito mais eficiência!`
+        }
+    ]
+
+/*dialogo inicial*/
+    function inicio() {
+        fundo.style.backgroundImage = `url('assets/img/fundo.png')`
+        nome.innerHTML = `NARRADOR`
+        texto.innerHTML = `O Professor Koro é uma criatura misteriosa que destruiu 70% da Lua e ameaçou fazer o
+         mesmo com a Terra em março do ano seguinte. Apesar de seu poder aterrorizante, ele fez um acordo com o governo:
+         seria o professor da turma 3-E do Colégio Kunugigaoka, uma sala de alunos considerados fracassados, dando a eles a
+         chance de assassiná-lo antes do prazo. Nenhum governo do mundo conseguiu detê-lo, então coube aos próprios alunos a missão
+         de salvar a Terra, enquanto ele os ensinava.`
+        botoes.innerHTML = `<button onclick="proximo()">Continuar</button>`
+    }
+
+    function proximo() {
+        fundo.style.backgroundImage = `url('assets/img/fundo.png')`
+        nome.innerHTML = `NARRADOR`
+        texto.innerHTML = `Sua missão é cumprir o desafio que o professor irá propor hoje na sala
+        para que a gente consiga finalmente salvar a Terra`
+        botoes.innerHTML = `<button onclick="intro()">Confirmar</button>`
+    }
+
+    function intro() {
+        fundo.style.backgroundImage = `url('assets/img/fundo_normal.png')`
+        nome.innerHTML = `PROFESSOR KORO`
+        texto.innerHTML = `Bom, alunos, vejo que vocês escolheram um dos seus colegas para representar a sala, caro aluno, poderia me dizer seu nome?`
+        botoes.innerHTML = `<input type="text" id="ipt_nome" placeholder="Digite seu nome."> <button onclick="salvarNome()">Confirmar</button>`
+    }
+
+    /*salva o nome e logo depois carrega a pergunta*/
+    function salvarNome() {
+        nomeJogador = ipt_nome.value
+        if (nomeJogador == ``) {
+            nomeJogador = `Aluno`
+        }
+        perguntaAtual = 0
+        carregarPergunta()
+    }
+
+
+    function carregarPergunta() {
+        let p = perguntas[perguntaAtual] /*salva a pergunta atual para depoi concatenar com o nome digitado pelo usuario*/
+
+        fundo.style.backgroundImage = `url('assets/img/fundo_normal.png')`
+        nome.innerHTML = `PROFESSOR KORO`
+        texto.innerHTML = `${nomeJogador}, ` + p.dialogo
+
+        botoes.innerHTML = ``
+        for (let i = 0; i < p.opcoes.length; i++) { /*for para percorres pelo json das perguntas*/
+            botoes.innerHTML += `<button onclick="responder('${p.opcoes[i]}')">${p.opcoes[i]}</button>`
+        }
+    }
+
+
+    function responder(escolha) {
+        let p = perguntas[perguntaAtual]
+
+        if (escolha == p.correta) {
+            acertos++
+            fundo.style.backgroundImage = `url('assets/img/fundo_normal.png')`
+            nome.innerHTML = `PROFESSOR KORO`
+            texto.innerHTML = `Correto, ${nomeJogador}! ` + p.textoAcerto
+
+            perguntaAtual++
+
+            if (perguntaAtual >= perguntas.length) {
+                botoes.innerHTML = `<button onclick="cenaFimBom()">Continuar</button>`
+            } else {
+                botoes.innerHTML = `<button onclick="carregarPergunta()">Continuar</button>`
+            }
+
+        } else {
+            erros++
+            contadorErros.innerHTML = `Erros: ${erros} / 3` /*conta os erros do jogador e mostra na tela*/
+
+            if (erros >= 3) {
+                fundo.style.backgroundImage = `url('assets/img/fundo_errado.png')`
+                nome.innerHTML = `PROFESSOR KORO`
+                texto.innerHTML = `Errado! A resposta correta era ${p.correta}. Você atingiu 3 erros...`
+                botoes.innerHTML = `<button onclick="cenaFimRuim()">Continuar</button>`
+            } else {
+                fundo.style.backgroundImage = `url('assets/img/fundo_errado.png')`
+                nome.innerHTML = `PROFESSOR KORO`
+                texto.innerHTML = `Errado, ${nomeJogador}! A resposta correta era ${p.correta}.`
+
+                perguntaAtual++
+
+                if (perguntaAtual >= perguntas.length) {
+                    botoes.innerHTML = `<button onclick="cenaFimBom()">Continuar</button>`
+                } else {
+                    botoes.innerHTML = `<button onclick="carregarPergunta()">Continuar</button>`
+                }
+            }
+        }
+    }
+
+
+    function cenaFimBom() {
+        fundo.style.backgroundImage = `url('assets/img/fundo_normal.png')`
+        nome.innerHTML = `PROFESSOR KORO`
+        texto.innerHTML = `${nomeJogador}, eu subestimei os seus conhecimentos em arquitetura computacional! Irei cumprir a minha promessa e não irei mais explodir a Terra. Foi um prazer ser seu professor!`
+        botoes.innerHTML = `<p> ${acertos} acertos  |   ${erros} erros</p>` +
+            `<button onclick="location.reload()">Jogar novamente</button>`
+    }
+
+    function cenaFimRuim() {
+        fundo.style.backgroundImage = `url('assets/img/fundo_final2.png')`
+        nome.innerHTML = `PROFESSOR KORO`
+        texto.innerHTML = `Você fracassou no nosso teste, ${nomeJogador}. Segundo os termos do nosso acordo, eu deveria explodir a Terra caso errasse três questões. Foi muito bom conhecer você... eu tinha esperança de que conseguisse!`
+        botoes.innerHTML = `<p> ${acertos} acertos  |   3 erros</p>` +
+            `<button onclick="location.reload()">Tentar novamente</button>`
+    }
+
+
+</script>
